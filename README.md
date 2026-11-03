@@ -43,6 +43,8 @@ To use VS Code Live Server, first start MySQL and the PHP task above, then open 
 ## Publishing
 For production hosting requirements and a deployment checklist, see [DEPLOYMENT.md](./DEPLOYMENT.md). Production requires a PHP/MySQL host; static-only hosting is not supported.
 
+Railway deployment is also supported through the included `Dockerfile`. See the Railway section in [DEPLOYMENT.md](./DEPLOYMENT.md) for setup steps.
+
 ## Demonstration accounts
 All three accounts use `Password123!` after running the seed script:
 - admin@cihrm.local

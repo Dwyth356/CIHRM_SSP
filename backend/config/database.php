@@ -2,23 +2,31 @@
 declare(strict_types=1);
 
 $envPath = dirname(__DIR__).'/.env';
-if (!is_file($envPath)) {
-    throw new RuntimeException('Missing backend/.env. Copy backend/.env.example and configure the database settings.');
-}
-$settings = parse_ini_file($envPath, false, INI_SCANNER_RAW);
-if ($settings === false) {
-    throw new RuntimeException('Could not read backend/.env.');
+$settings = [];
+if (is_file($envPath)) {
+    $settings = parse_ini_file($envPath, false, INI_SCANNER_RAW);
+    if ($settings === false) {
+        throw new RuntimeException('Could not read backend/.env.');
+    }
 }
 
-$environment = strtolower((string)($settings['APP_ENV'] ?? 'development'));
+$setting = static function (string $key, string $default = '') use ($settings): string {
+    $value = getenv($key);
+    return $value !== false ? $value : (string)($settings[$key] ?? $default);
+};
+
+$environment = strtolower($setting('APP_ENV', 'development'));
 if (!in_array($environment, ['development', 'production'], true)) {
     throw new RuntimeException('APP_ENV must be either development or production.');
 }
-$host = $settings['DB_HOST'] ?? '127.0.0.1';
-$port = $settings['DB_PORT'] ?? '3306';
-$name = $settings['DB_NAME'] ?? 'cihrm_db';
-$user = $settings['DB_USER'] ?? 'root';
-$password = $settings['DB_PASSWORD'] ?? '';
+if (!is_file($envPath) && $environment !== 'production') {
+    throw new RuntimeException('Missing backend/.env. Copy backend/.env.example and configure the database settings.');
+}
+$host = $setting('DB_HOST', '127.0.0.1');
+$port = $setting('DB_PORT', '3306');
+$name = $setting('DB_NAME', 'cihrm_db');
+$user = $setting('DB_USER', 'root');
+$password = $setting('DB_PASSWORD');
 
 if ($environment === 'production' &&
     ($host === '' || $name === '' || $user === '' || $password === '' || strtolower($user) === 'root')) {
