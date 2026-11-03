@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run C.I.H.R.M. (PHP)",
+      "type": "process",
+      "command": "C:\\xampp\\php\\php.exe",
+      "args": [
+        "-S",
+        "127.0.0.1:3000",
+        "-t",
+        "."
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      }
+    }
+  ]
+}
